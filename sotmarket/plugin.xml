@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <name>
+        <lang name="default">Партнерский плагин Sotmarket</lang>
+    </name>
+    <author>
+        <lang name="default">Разработчики Sotmarket</lang>
+    </author>
+    <homepage>http://sotmarket.ru</homepage>
+    <settings>{sotmarket}admin/</settings>
+    <version>1.0.0</version>
+    <requires>
+        <livestreet>0.4.0</livestreet>
+        <plugins>
+
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Партнерский плагин Sotmarket.</lang>
+        <lang name="russian">Партнерский плагин Sotmarket.</lang>
+    </description>
+</plugin>
