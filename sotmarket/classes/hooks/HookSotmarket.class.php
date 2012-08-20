@@ -111,12 +111,23 @@ class PluginSotmarket_HookSotmarket extends Hook {
 
         $aParams = array();
         $aTmpParams = explode(' ',$sParams);
+        $sPreviosKey = '';
         foreach($aTmpParams as $sTmpParam){
-            list($sKey,$sValue) = explode('=',$sTmpParam);
-            $sKey = trim($sKey);
-            $sValue = trim($sValue);
+            //если нет типа (=) - это продолжение значения предыдущего тега
+            $sTmpParam = str_replace('"','',$sTmpParam);
+            $aTmpParams = explode('=',$sTmpParam);
+            if (count($aTmpParams) == 2){
+                $sKey = trim($aTmpParams[0]);
+                $sValue = trim($aTmpParams[1]);
+                $aParams[$sKey] = $sValue;
+                $sPreviosKey = $sKey;
+            } else {
+                $aParams[$sPreviosKey ] .= ' '.trim($aTmpParams[0]);
+            }
 
-            $aParams[$sKey] = $sValue;
+
+
+
         }
 
         $oTmp = null;
