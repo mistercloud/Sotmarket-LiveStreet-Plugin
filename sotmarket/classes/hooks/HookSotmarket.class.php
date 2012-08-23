@@ -10,6 +10,7 @@ class PluginSotmarket_HookSotmarket extends Hook {
         $this->AddHook('topic_add_before','SaveTopic');
         $this->AddHook('topic_edit_before','SaveTopic');
         $this->AddHook('topic_edit_show','EditTopic');
+
     }
 
     public function EditTopic($aParams){
@@ -34,13 +35,10 @@ class PluginSotmarket_HookSotmarket extends Hook {
     public function SaveTopic($aParams) {
         $oTopic=$aParams['oTopic'];
 
-        if (getRequest('sotmarket_ids')) {
-            $oTopic->setSotmarketIds(getRequest('sotmarket_ids'));
-        }
+        $oTopic->setSotmarketIds(getRequest('sotmarket_ids'));
 
-        if (getRequest('sotmarket_name')) {
-            $oTopic->setSotmarketName(getRequest('sotmarket_name'));
-        }
+        $oTopic->setSotmarketName(getRequest('sotmarket_name'));
+
 
     }
 
@@ -50,6 +48,14 @@ class PluginSotmarket_HookSotmarket extends Hook {
      * @return string
      */
     public function AdditionalFields(){
+        $sTemplates = '';
+        $sSotmarketTemplatesPath = Plugin::GetPath(__CLASS__)  .'templates/';
+        $aTemplateFiles = glob($sSotmarketTemplatesPath.'*.php');
+        $aTemplateFiles = str_replace( array($sSotmarketTemplatesPath,'.php'),'',$aTemplateFiles );
+        foreach($aTemplateFiles as $sTemplate){
+            $sTemplates .= '<option value="'.$sTemplate.'" >'.$sTemplate.'</option>';
+        }
+        $this->Viewer_Assign('sTemplates',$sTemplates);
 
         return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__).'additional_fields.tpl');
 
@@ -67,10 +73,8 @@ class PluginSotmarket_HookSotmarket extends Hook {
         foreach($aTopics as $oTopic){
             $sText = $oTopic->getTextShort();
 
-            if ($sText = $this->checkText($sText,$oTopic)){
+            if ($sText = $oTopic->checkSotmarketText($sText,$oTopic)){
                 $oTopic->setTextShort($sText,$oTopic);
-            } else {
-                return;
             }
 
         }
@@ -88,7 +92,7 @@ class PluginSotmarket_HookSotmarket extends Hook {
         $oSotmarketPlugin->setCurrentTopic($oTopic);
         $sText = $oTopic->getText();
 
-        if ($sText = $this->checkText($sText,$oTopic)){
+        if ($sText = $oTopic->checkSotmarketText($sText,$oTopic)){
             $oTopic->setText($sText,$oTopic);
         } else {
             return;
@@ -100,42 +104,5 @@ class PluginSotmarket_HookSotmarket extends Hook {
 
     }
 
-    protected function checkText($sText,$oTopic){
-        $aMaches = array();
-        $sParams = '';
-        if (preg_match('%{get_sotmarket(.*?)}%s',$sText,$aMaches)){
-            $sParams = trim($aMaches[1]);
-        } else {
-            return;
-        }
 
-        $aParams = array();
-        $aTmpParams = explode(' ',$sParams);
-        $sPreviosKey = '';
-        foreach($aTmpParams as $sTmpParam){
-            //если нет типа (=) - это продолжение значения предыдущего тега
-            $sTmpParam = str_replace('"','',$sTmpParam);
-            $aTmpParams = explode('=',$sTmpParam);
-            if (count($aTmpParams) == 2){
-                $sKey = trim($aTmpParams[0]);
-                $sValue = trim($aTmpParams[1]);
-                $aParams[$sKey] = $sValue;
-                $sPreviosKey = $sKey;
-            } else {
-                $aParams[$sPreviosKey ] .= ' '.trim($aTmpParams[0]);
-            }
-
-
-
-
-        }
-
-        $oTmp = null;
-        $sSotmBlock = smarty_function_get_sotmarket($aParams,$oTmp,$oTopic);
-
-        $sText = preg_replace('%{get_sotmarket.*?}%s',$sSotmBlock,$sText);
-
-        return $sText;
-
-    }
 }
