@@ -5,14 +5,13 @@ $config['site_id'] = 0;
 $config['sotm_config'] = array(
     'SOTMARKET_SITE_ID' => 0,
     'SOTMARKET_PARTNER_ID' => 0,
-    'SOTMARKET_LINK_TYPE' => 'link', //���������� �� ������ ������ ��� �������� �� ����.
-                                        //��������� ��������� 'redirect', 'link'
-    'SOTMARKET_BLOCK_TYPE' => 'informer', //������ �� sotmarket ��� ������� �� ����� ��������
-                                          //��������� �������� 'informer', 'shop'
-    'SOTMARKET_BLOCK_STATUSES' => 'all', //���������� ��� ������ ��� ������ � �������
-                                        //��������� �������� 'all' , 'available'
-    'SOTMARKET_LABEL_TYPE' => 'from', //��� ����� � ������. �������� 'from', 'subref'
-    'SOTMARKET_FROM' => '', //�����
+    'SOTMARKET_LINK_TYPE' => 'link', //Тип ссылки на товар. Прямая ссылка на сотмаркет или редирект
+                                        //возможные значения 'redirect', 'link'
+    'SOTMARKET_BLOCK_TYPE' => 'informer', // НЕ ИЗМЕНЯТЬ, для совсемстимости.
+    'SOTMARKET_BLOCK_STATUSES' => 'all', //Какие товары отображать (все или только доступные)
+                                        //возможные значения 'all' , 'available'
+    'SOTMARKET_LABEL_TYPE' => 'from', //тип метки в ссылке 'from', 'subref'
+    'SOTMARKET_FROM' => '', //метка в ссылке
 
 
 );
