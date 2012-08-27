@@ -7,7 +7,6 @@
         <lang name="default">Разработчики Sotmarket</lang>
     </author>
     <homepage>http://sotmarket.ru</homepage>
-    <settings>{sotmarket}admin/</settings>
     <version>1.0.0</version>
     <requires>
         <livestreet>0.4.0</livestreet>
