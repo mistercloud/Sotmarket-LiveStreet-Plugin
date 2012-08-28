@@ -11,9 +11,9 @@ include_once(dirname(__FILE__).'/common/include.php');
 class PluginSotmarket extends Plugin {
 
     protected $aInherits=array(
-        'entity'  =>array('ModuleTopic_EntityTopic')
+        'entity'  => array('ModuleTopic_EntityTopic'),
+        'module' => array('ModuleTopic','ModuleText'),
     );
-
 
     protected static $oInstance;
     protected $oTopic = null;
@@ -93,14 +93,11 @@ function smarty_function_get_sotmarket($params, &$smarty = null, $oTopic = null)
 
     //если не указаны id и имя пробуем брать из дополнительных полей
     if (!$sProductName && !$aProductIds){
-        if (!$oTopic){
-            return;
+        if ($oTopic){
+            $sProductName = $oTopic->getSotmarketName();
+            $aProductIds = explodeProductId($oTopic->getSotmarketIds());
         }
-        $sProductName = $oTopic->getSotmarketName();
-        $aProductIds = $oTopic->getSotmarketIds();
-        if (!$sProductName && !$aProductIds){
-            return;
-        }
+
     }
 
     $iCnt = 1;
@@ -152,12 +149,16 @@ function smarty_function_get_sotmarket($params, &$smarty = null, $oTopic = null)
     if (isset($params['topic_additional']) && $params['topic_additional']){
         $oTopic = $oSotmarket->getCurrentTopic();
         if ($oTopic){
-            $aProductIds = $oTopic->getSotmarketIds();
+            $aProductIds = explodeProductId($oTopic->getSotmarketIds());
             $sProductName = $oTopic->getSotmarketName();
         } else {
             return;
         }
 
+    }
+
+    if (!$sProductName && !$aProductIds){
+        return;
     }
 
     return $oSotmarket->getData($params['type'],$aProductIds,$sProductName,$iCnt,$sTemplate,$sImageSize,$aCategories);
